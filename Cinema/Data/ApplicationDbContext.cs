@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Cinema.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,5 +13,6 @@ namespace Cinema.Data
             : base(options)
         {
         }
+       // DbSet<ErrorViewModel> ErrorModel {get;set;} <- dodawanie nowej tabeli
     }
 }
