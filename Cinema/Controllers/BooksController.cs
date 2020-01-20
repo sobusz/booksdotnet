@@ -61,6 +61,11 @@ namespace Cinema.Controllers
 
             if (ModelState.IsValid)
             {
+                if (file == null)
+                {
+                    ModelState.AddModelError("CoverImage", "Please Upload Image");
+                }
+
 
                 if (!ModelState.IsValid)
                 {
@@ -117,35 +122,43 @@ namespace Cinema.Controllers
                 return NotFound();
             }
 
-            if (file != null)
-            {
-                using (var memoryStream = new MemoryStream())
-                {
-                    await file.CopyToAsync(memoryStream);
-                    var imageToBeUploadedByteArray = memoryStream.ToArray();
-                    books.CoverImage = imageToBeUploadedByteArray;
-                }
-            }
 
             if (ModelState.IsValid)
             {
-                try
+                if (file == null)
                 {
-                    _context.Update(books);
-                    await _context.SaveChangesAsync();
+                    ModelState.AddModelError("CoverImage", "Please Upload Image");
                 }
-                catch (DbUpdateConcurrencyException)
+
+                if (file != null)
                 {
-                    if (!BooksExists(books.BookId))
+                    using (var memoryStream = new MemoryStream())
                     {
-                        return NotFound();
+                        await file.CopyToAsync(memoryStream);
+                        var imageToBeUploadedByteArray = memoryStream.ToArray();
+                        books.CoverImage = imageToBeUploadedByteArray;
                     }
-                    else
+
+                    try
                     {
-                        throw;
+                        _context.Update(books);
+                        await _context.SaveChangesAsync();
                     }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!BooksExists(books.BookId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                    return RedirectToAction(nameof(Index));
                 }
-                return RedirectToAction(nameof(Index));
+
+             
             }
             return View(books);
         }

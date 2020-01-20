@@ -28,7 +28,6 @@ namespace Cinema.Models
         [Required]
         public int PublishYear { get; set; }
 
-
         public byte[] CoverImage { get; set; }
     }
 }
