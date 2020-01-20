@@ -4,13 +4,13 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Our books.</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
+@*<table class="table">*@
+@*<thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
@@ -35,37 +35,55 @@
             </th>
             <th></th>
         </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.BookAddedTime)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PublishYear)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CoverImage)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    </thead>*@
+@*<tbody>*@
+<div class="row">
+    @foreach (var item in Model)
+    {
+
+        <div class="col-sm-4">
+
+            <div class="card">
+                @*<img class="card-img-top" src="..." alt="Card image cap">*@
+
+                <p>
+                    @{
+                        var base64 = Convert.ToBase64String(item.CoverImage);
+                        var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+                    }
+
+                    <img src="@imgSrc" class="col-sm-12"/>
+                </p>
+
+                <div class="card-body">
+                    <h3 class="card-title" style="height: 16vh">
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </h3>
+                    <h4 class="card-subtitle mb-2 text-muted">
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </h4>
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        @Html.DisplayFor(modelItem => item.Genre)
+                    </h6>
+                    @Html.DisplayFor(modelItem => item.BookAddedTime)
+
+                    <h6 class="card-subtitle mb-2 text-muted">
+                        @Html.DisplayFor(modelItem => item.PublishYear)
+                    </h6>
+                    <p class="card-text">
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </p>
+
+
+                    @*@Html.DisplayFor(modelItem => item.CoverImage)*@
+
+                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+@*</tbody>
+    </table>*@

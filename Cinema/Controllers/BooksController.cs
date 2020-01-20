@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Cinema.Data;
 using Cinema.Models;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace Cinema.Controllers
 {
@@ -54,16 +56,38 @@ namespace Cinema.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("BookId,Title,Author,Description,Genre,BookAddedTime,PublishYear,CoverImage")] Books books)
+        public async Task<IActionResult> Create([Bind("BookId,Title,Author,Description,Genre,BookAddedTime,PublishYear,CoverImage")] Books books, IFormFile file)
         {
+
             if (ModelState.IsValid)
             {
+
+                if (!ModelState.IsValid)
+                {
+                    return View(books);
+                }
+
+                if (file != null)
+                {
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await file.CopyToAsync(memoryStream);
+                        var imageToBeUploadedByteArray = memoryStream.ToArray();
+                        books.CoverImage = imageToBeUploadedByteArray;
+                    }
+                }
+
                 _context.Add(books);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+
+
+                
+
             }
             return View(books);
         }
+
 
         // GET: Books/Edit/5
         public async Task<IActionResult> Edit(int? id)
