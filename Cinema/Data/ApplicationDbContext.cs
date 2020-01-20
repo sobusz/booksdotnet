@@ -13,6 +13,6 @@ namespace Cinema.Data
             : base(options)
         {
         }
-       // DbSet<ErrorViewModel> ErrorModel {get;set;} <- dodawanie nowej tabeli
+        DbSet<Books> Books { get; set; }
     }
 }
