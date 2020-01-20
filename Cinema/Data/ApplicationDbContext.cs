@@ -13,6 +13,6 @@ namespace Cinema.Data
             : base(options)
         {
         }
-        DbSet<Books> Books { get; set; }
+       public DbSet<Books> Books { get; set; }
     }
 }

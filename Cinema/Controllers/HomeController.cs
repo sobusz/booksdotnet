@@ -23,7 +23,12 @@ namespace Cinema.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Terms()
+        {
+            return View();
+        }
+
+        public IActionResult Books()
         {
             return View();
         }
