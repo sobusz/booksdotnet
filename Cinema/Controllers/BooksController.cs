@@ -110,11 +110,21 @@ namespace Cinema.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookId,Title,Author,Description,Genre,BookAddedTime,PublishYear,CoverImage")] Books books)
+        public async Task<IActionResult> Edit(int id, [Bind("BookId,Title,Author,Description,Genre,BookAddedTime,PublishYear,CoverImage")] Books books,  IFormFile file)
         {
             if (id != books.BookId)
             {
                 return NotFound();
+            }
+
+            if (file != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await file.CopyToAsync(memoryStream);
+                    var imageToBeUploadedByteArray = memoryStream.ToArray();
+                    books.CoverImage = imageToBeUploadedByteArray;
+                }
             }
 
             if (ModelState.IsValid)

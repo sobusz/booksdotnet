@@ -10,15 +10,24 @@ namespace Cinema.Models
     {
         [Key]
         public int BookId { get; set; }
+        [Required]
+        [StringLength(60, MinimumLength = 2)]
         public string Title { get; set; }
+        [Required]
+        [StringLength(60, MinimumLength = 3)]
         public string Author { get; set; }
+
         public string Description { get; set; }
+
         public string Genre { get; set; }
 
+        [Required]
         [DataType(DataType.Date)]
         public DateTime BookAddedTime { get; set; }
 
+        [Required]
         public int PublishYear { get; set; }
+
 
         public byte[] CoverImage { get; set; }
     }
