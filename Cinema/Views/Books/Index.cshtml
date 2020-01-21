@@ -1,4 +1,7 @@
-﻿@model IEnumerable<Cinema.Models.Books>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+
+@model IEnumerable<Cinema.Models.Books>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,45 +9,19 @@
 
 <h1>Our books.</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-@*<table class="table">*@
-@*<thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Genre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.BookAddedTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.PublishYear)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CoverImage)
-            </th>
-            <th></th>
-        </tr>
-    </thead>*@
-@*<tbody>*@
-<div class="row">
+@if (SignInManager.IsSignedIn(User))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>}
+
+<div class="card-columns">
     @foreach (var item in Model)
     {
 
-        <div class="col-sm-4">
+        @*<div class="col-sm-4">*@
 
             <div class="card">
-                @*<img class="card-img-top" src="..." alt="Card image cap">*@
 
                 <p>
                     @{
@@ -52,38 +29,54 @@
                         var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
                     }
 
-                    <img src="@imgSrc" class="col-sm-12"/>
+                    <img src="@imgSrc" class="col-sm-12" />
                 </p>
 
                 <div class="card-body">
-                    <h3 class="card-title" style="height: 16vh">
+                    <h2 class="card-title">
                         @Html.DisplayFor(modelItem => item.Title)
-                    </h3>
-                    <h4 class="card-subtitle mb-2 text-muted">
+                    </h2>
+                    <h5 class="card-subtitle mb-2 text-muted">
+                        Author:
                         @Html.DisplayFor(modelItem => item.Author)
-                    </h4>
-                    <h6 class="card-subtitle mb-2 text-muted">
-                        @Html.DisplayFor(modelItem => item.Genre)
-                    </h6>
-                    @Html.DisplayFor(modelItem => item.BookAddedTime)
+                    </h5>
+                    <ul class="list-group list-group-flush">
 
-                    <h6 class="card-subtitle mb-2 text-muted">
-                        @Html.DisplayFor(modelItem => item.PublishYear)
-                    </h6>
-                    <p class="card-text">
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </p>
+                        <li class="list-group-item">
+                            Genre:
+                            @Html.DisplayFor(modelItem => item.Genre)
+                        </li>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="list-group-item">
+                                Book added time:
 
+                                @Html.DisplayFor(modelItem => item.BookAddedTime)
+                            </li>
+                        }
 
-                    @*@Html.DisplayFor(modelItem => item.CoverImage)*@
+                        <li class="list-group-item">
+                            Was published:
+                            @Html.DisplayFor(modelItem => item.PublishYear)
+                        </li>
 
-                    <a asp-action="Edit" asp-route-id="@item.BookId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.BookId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                        <li class="list-group-item">
+                            Description:
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </li>
+
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="list-group-item">
+                                <a class="card-link" asp-action="Edit" asp-route-id="@item.BookId">Edit</a>
+                                <a class="card-link" asp-action="Details" asp-route-id="@item.BookId">Details</a>
+                                <a class="card-link" asp-action="Delete" asp-route-id="@item.BookId">Delete</a>
+                            </li>
+                         }
+                    </ul>
                 </div>
             </div>
-        </div>
+        @*</div>*@
     }
 </div>
-@*</tbody>
-    </table>*@
+
