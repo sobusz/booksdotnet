@@ -82,12 +82,16 @@ namespace Cinema.Controllers
                     }
                 }
 
-                _context.Add(books);
+                if (books.PublishYear <= DateTime.Now.Year)
+                {
+                    _context.Add(books);
                     await _context.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
-
-
-                
+                }
+                else
+                {
+                    ModelState.AddModelError("PublishYear", "Selected year can not be greater than current");
+                }
 
             }
             return View(books);
@@ -138,24 +142,37 @@ namespace Cinema.Controllers
                         var imageToBeUploadedByteArray = memoryStream.ToArray();
                         books.CoverImage = imageToBeUploadedByteArray;
                     }
+                    if (books.PublishYear <= DateTime.Now.Year)
+                    {
+                        try
+                        {
+                            _context.Update(books);
+                            await _context.SaveChangesAsync();
+                        }
+                        catch (DbUpdateConcurrencyException)
+                        {
+                            if (!BooksExists(books.BookId))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
 
-                    try
-                    {
-                        _context.Update(books);
-                        await _context.SaveChangesAsync();
-                    }
-                    catch (DbUpdateConcurrencyException)
-                    {
-                        if (!BooksExists(books.BookId))
-                        {
-                            return NotFound();
                         }
-                        else
-                        {
-                            throw;
-                        }
+                        return RedirectToAction(nameof(Index));
+
+                        //_context.Add(books);
+                        //await _context.SaveChangesAsync();
+                        //return RedirectToAction(nameof(Index));
                     }
-                    return RedirectToAction(nameof(Index));
+                    else
+                    {
+                        ModelState.AddModelError("PublishYear", "Selected year can not be greater than current");
+                    }
+                    
+
                 }
 
              
@@ -197,4 +214,5 @@ namespace Cinema.Controllers
             return _context.Books.Any(e => e.BookId == id);
         }
     }
+
 }

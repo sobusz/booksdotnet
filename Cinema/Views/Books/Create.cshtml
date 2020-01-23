@@ -40,7 +40,8 @@
             <div class="form-group">
                 <label asp-for="PublishYear" class="control-label"></label>
                 <input asp-for="PublishYear" class="form-control" />
-                <span asp-validation-for="PublishYear" class="text-danger"></span>
+                @Html.ValidationMessageFor(x => x.PublishYear, "", new { @class = "text-danger" })
+
             </div>
 
             <div class="form-group">
